@@ -24,8 +24,8 @@ jobs:
         uses: redhat-actions/buildah-build@v2.13
         with: 
           image: mariadb
-          context: /home/runner/work/AUtomated-wordpress/AUtomated-wordpress/mariadb
+          context: ./mariadb
           tags: |
             latest
             V1.1
-          containerfiles: .Containerfile
+          containerfiles: ./mariadb/Containerfile
