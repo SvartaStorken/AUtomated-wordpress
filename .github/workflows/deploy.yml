@@ -5,9 +5,17 @@ on:
     branches:
       - test
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ubi10-mariadb-12.2
+
 jobs:
   build:
     runs-on: ubuntu-latest
+  
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout repository
@@ -23,9 +31,21 @@ jobs:
       - name: set up buildah
         uses: redhat-actions/buildah-build@v2.13
         with: 
-          image: mariadb
+          image: ${{ env.IMAGE_NAME }}
           context: ./mariadb
           tags: |
             latest
             v1.1
           containerfiles: ./mariadb/Containerfile
+
+      - name: Push MariaDB image to GitHub Packages Registry
+        uses: redhat-actions/push-to-registry@v2.8
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: |
+            latest
+            v1.1
+          registry: ${{ env.REGISTRY }}/svartastorken
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
