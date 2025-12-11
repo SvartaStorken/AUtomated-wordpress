@@ -14,14 +14,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Log in to redhat registry
-        uses: redhat-actions/podman-login@v2.1
+        uses: redhat-actions/podman-login@v1.7
         with:
           registry: registry.redhat.io
           username: ${{ secrets.RH_USERNAME }}
           password: ${{ secrets.RH_PASSWORD }}
       
       - name: set up buildah
-        uses: redhat-actions/buildah-build@v2.13
+        uses: redhat-actions/buildah-build@v2.9
         with: 
           image: mariadb
           tags: |
