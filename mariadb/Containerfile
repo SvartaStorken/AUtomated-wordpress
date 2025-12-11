@@ -8,10 +8,22 @@ COPY mariadb.repo /etc/yum.repos.d/
 RUN dnf -y install MariaDB-server MariaDB-client findutils procps-ng && \
     dnf clean all
 
-RUN mkdir -p /var/lib/mariadb && mkdir -p /var/run/mysqld
+# 3. Kopiera in scripten
+COPY fix-permissions /usr/local/bin/
+COPY run-db.sh /usr/local/bin/
+
+# 4. Gör scripten körbara
+RUN chmod +x /usr/local/bin/fix-permissions \
+    && chmod +x /usr/local/bin/run-db.sh
+
+# 5. Mappar och Rättigheter
+RUN mkdir -p /var/lib/mysql && mkdir -p /var/run/mariadb && \
+    fix-permissions /var/lib/mariadb && \
+    fix-permissions /var/run/mysqld
 
 RUN mariadb-install-db --user=mysql ata=/var/lib/mariadb
 
 EXPOSE 3306
+USER 1001
 
-CMD ["/usr/sbin/mariadbd"]
+CMD ["/usr/local/bin/run-db.sh"]
