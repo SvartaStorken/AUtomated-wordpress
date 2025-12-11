@@ -61,3 +61,7 @@ jobs:
           insecure_skip_tls_verify: true
           namespace: ${{ env.OPENSHIFT_NAMESPACE }}
 
+      - name: Deploy MariaDB to OpenShift
+        run: |
+          oc apply -f ./mariadb/mariadb-deployment.yaml
+

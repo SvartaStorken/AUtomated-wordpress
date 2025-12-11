@@ -16,11 +16,11 @@ spec:
     spec:
       containers:
         - name: mariadb
-          image: ghcr.io/svartastorken/ubi10-mariadb-12
+          image: ghcr.io/svartastorken/ubi10-mariadb-12.2:latest
           ports:
             - containerPort: 3306
           imagePullPolicy: Always
-          resurces:
+          resorces:
             requests:
               memory: "512Mi"
               cpu: "500m"
