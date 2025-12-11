@@ -6,10 +6,9 @@ COPY mariadb.repo /etc/yum.repos.d/
 
 RUN dnf install -y mariadb-server
 
-RUN mkdir -p /var/lib/mariadb \
-    && chown -R mysql:mysql /var/lib/mariadb \
-    && mkdir -p /var/run/mysqld \
-    && chown -R mysql:mysql /var/run/mysqld
+RUN mkdir -p /var/lib/mariadb && mkdir -p /var/run/mysqld
+
+RUN mariadb-install-db --user=mariadb ata=/var/lib/mariadb
 
 EXPOSE 3306
 
