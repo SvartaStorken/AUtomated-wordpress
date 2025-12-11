@@ -8,6 +8,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ubi10-mariadb-12.2
+  OPENSHIFT_NAMESPACE: test-miljo1
 
 jobs:
   build:
@@ -48,4 +49,15 @@ jobs:
           registry: ${{ env.REGISTRY }}/svartastorken
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+    
+      - name: ocp install
+        uses: redhat-actions/oc-installer@v1.2
+
+      - name: Login to OpenShift cluster
+        uses: redhat-actions/oc-login@v1.3
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER}}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          insecure_skip_tls_verify: true
+          namespace: ${{ env.OPENSHIFT_NAMESPACE }}
 
