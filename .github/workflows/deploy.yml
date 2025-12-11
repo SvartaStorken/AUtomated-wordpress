@@ -21,10 +21,11 @@ jobs:
           password: ${{ secrets.RH_PASSWORD }}
       
       - name: set up buildah
-        uses: redhat-actions/buildah-build@v2.9
+        uses: redhat-actions/buildah-build@v2.13
         with: 
           image: mariadb
+          context: ./mariadb
           tags: |
             latest
             V1.1
-          containerfiles: ./mariadb/Containerfile
+          containerfiles: ./Containerfile
