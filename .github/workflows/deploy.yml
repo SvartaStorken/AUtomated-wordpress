@@ -26,5 +26,5 @@ jobs:
           image: mariadb
           tags: |
             latest
-            V1.0
-          containerfiles: ./Containerfile
+            V1.1
+          containerfiles: ./mariadb/Containerfile

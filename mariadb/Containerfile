@@ -1,0 +1,11 @@
+FROM registry.redhat.io/ubi10/ubi:latest
+LABEL description="MariaDB on UBI 10 - Custom Build"
+
+# 1. Konfigurera MariaDB Repo (eftersom det kan saknas i UBI 10 base)
+COPY mariadb.repo /etc/yum.repos.d/
+
+RUN dnf install -y mariadb-server
+
+EXPOSE 3306
+
+CMD ["/usr/sbin/mariadbd"]

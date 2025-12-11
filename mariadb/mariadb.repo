@@ -1,0 +1,7 @@
+# MariaDB 12.2 RedHatEnterpriseLinux repository list
+[mariadb]
+name = MariaDB
+baseurl = https://mirror.group.one/mariadb/yum/12.2/rhel/$releasever/$basearch
+gpgkey = https://mirror.group.one/mariadb/yum/RPM-GPG-KEY-MariaDB
+gpgcheck = 1
+module_hotfixes=1
