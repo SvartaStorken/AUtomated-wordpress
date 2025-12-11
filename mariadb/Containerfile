@@ -18,10 +18,8 @@ RUN chmod +x /usr/local/bin/fix-permissions \
 
 # 5. Mappar och Rättigheter
 RUN mkdir -p /var/lib/mysql && mkdir -p /var/run/mariadb && \
-    fix-permissions /var/lib/mariadb && \
-    fix-permissions /var/run/mysqld
-
-RUN mariadb-install-db --user=mysql ata=/var/lib/mariadb
+    /usr/local/bin/fix-permissions /var/lib/mysql && \
+    /usr/local/bin/fix-permissions /var/run/mariadb
 
 EXPOSE 3306
 USER 1001
