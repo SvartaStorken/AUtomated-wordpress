@@ -4,7 +4,9 @@ LABEL description="MariaDB on UBI 10 - Custom Build"
 # 1. Konfigurera MariaDB Repo (eftersom det kan saknas i UBI 10 base)
 COPY mariadb.repo /etc/yum.repos.d/
 
-RUN dnf install -y mariadb-server
+# 2. Installera MariaDB Server
+RUN dnf -y install MariaDB-server MariaDB-client findutils procps-ng && \
+    dnf clean all
 
 RUN mkdir -p /var/lib/mariadb && mkdir -p /var/run/mysqld
 
