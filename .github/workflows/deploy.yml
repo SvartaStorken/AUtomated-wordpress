@@ -1,0 +1,30 @@
+name: Bulding and Deploying WordPress with MariaDB
+
+on:
+  push:
+    branches:
+      - test
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to redhat registry
+        uses: redhat-actions/podman-login@v2.1
+        with:
+          registry: registry.redhat.io
+          username: ${{ secrets.RH_USERNAME }}
+          password: ${{ secrets.RH_PASSWORD }}
+      
+      - name: set up buildah
+        uses: redhat-actions/buildah-build@v2.13
+        with: 
+          image: mariadb
+          tags: |
+            latest
+            V1.0
+          containerfile: ./Containerfile
