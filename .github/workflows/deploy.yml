@@ -28,4 +28,4 @@ jobs:
           tags: |
             latest
             V1.1
-          containerfiles: ./Containerfile
+          containerfiles: .Containerfile
