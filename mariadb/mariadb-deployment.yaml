@@ -20,6 +20,13 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 3306
+          env:
+            - name: MARIADB_USER
+              value: "wordpress"
+            - name: MARIADB_PASSWORD
+              value: "hemligt"      # I produktion bör detta vara en Secret
+            - name: MARIADB_DATABASE
+              value: "wordpress_db"
           resources:
             requests:
               memory: "512Mi"
