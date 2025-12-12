@@ -45,7 +45,7 @@ jobs:
           image: ${{ env.IMAGE_NAME }}
           tags: |
             latest
-            v1.1
+            v2.0
           registry: ${{ env.REGISTRY }}/svartastorken
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
