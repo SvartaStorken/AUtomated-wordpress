@@ -1,28 +1,42 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Starting MariaDB Wrapper..."
+# Sätt defaults (OBS: Inga backslash innan $ här!)
+DB_NAME=${MARIADB_DATABASE:-wordpress_db}
+DB_USER=${MARIADB_USER:-wordpress}
+DB_PASS=${MARIADB_PASSWORD:-hemligt}
 
-# 1. Starta i osäkert läge (bakgrunden) utan att försöka fånga PID
-echo "🔓 Starting temporary server (skip-grant-tables)..."
+echo "🚀 Starting MariaDB Wrapper..."
+echo "👤 User: $DB_USER"
+echo "🗄️  DB:   $DB_NAME"
+
+# 1. Starta i osäkert läge
+echo "🔓 Starting temporary server..."
 /usr/sbin/mariadbd --datadir=/var/lib/mysql --bind-address=0.0.0.0 --skip-grant-tables &
 
-# 2. Vänta på att den startar
+# 2. Vänta
 echo "⏳ Waiting for server..."
 sleep 10
 
-# 3. Kör din SQL-fil
-echo "📝 Running init_db.sql..."
-mariadb -u root < /usr/local/bin/init_db.sql
+# 3. Kör SQL
+echo "📝 Configuring Database..."
+mariadb -u root <<-EOSQL
+    FLUSH PRIVILEGES;
+    CREATE DATABASE IF NOT EXISTS \`$DB_NAME\`;
+    CREATE USER IF NOT EXISTS '$DB_USER'@'%' IDENTIFIED BY '$DB_PASS';
+    CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';
+    GRANT ALL PRIVILEGES ON \`$DB_NAME\`.* TO '$DB_USER'@'%';
+    GRANT ALL PRIVILEGES ON \`$DB_NAME\`.* TO '$DB_USER'@'localhost';
+    ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD('$DB_PASS');
+    GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
+    FLUSH PRIVILEGES;
+EOSQL
 
-# 4. Döda den tillfälliga servern med pkill (Säkrare metod)
+# 4. Starta om
 echo "🛑 Stopping temporary server..."
 pkill mariadbd
-
-# Vänta tills processen verkligen är borta
 echo "⏳ Waiting for shutdown..."
 while pgrep mariadbd > /dev/null; do sleep 1; done
 
-# 5. Starta på riktigt
 echo "🔥 Starting MariaDB (Secure mode)..."
 exec /usr/sbin/mariadbd --datadir=/var/lib/mysql --bind-address=0.0.0.0
