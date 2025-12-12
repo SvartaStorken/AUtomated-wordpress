@@ -10,11 +10,12 @@ RUN dnf -y install MariaDB-server MariaDB-client findutils procps-ng && \
 
 # 3. Kopiera in scripten
 COPY fix-permissions /usr/local/bin/
-COPY run-db.sh /usr/local/bin/
+COPY init_db.sql /usr/local/bin/
+COPY run-db.sh /usr/local/bin
 
 # 4. Gör scripten körbara
-RUN chmod +x /usr/local/bin/fix-permissions \
-    && chmod +x /usr/local/bin/run-db.sh
+RUN chmod +x /usr/local/bin/fix-permissions && \
+    chmod +x /usr/local/bin/run-db.sh
 
 # 5. Mappar och Rättigheter
 RUN mkdir -p /var/lib/mysql && mkdir -p /var/run/mariadb && \
