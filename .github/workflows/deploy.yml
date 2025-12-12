@@ -3,7 +3,7 @@ name: Bulding and Deploying WordPress with MariaDB
 on:
   push:
     branches:
-      - test.image
+      - test-image
 
 env:
   REGISTRY: ghcr.io
