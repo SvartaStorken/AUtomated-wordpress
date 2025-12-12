@@ -3,7 +3,7 @@ name: Bulding and Deploying WordPress with MariaDB
 on:
   push:
     branches:
-      - test
+      - test.image
 
 env:
   REGISTRY: ghcr.io
@@ -36,7 +36,7 @@ jobs:
           context: ./mariadb
           tags: |
             latest
-            v1.1
+            v2.0
           containerfiles: ./mariadb/Containerfile
 
       - name: Push MariaDB image to GitHub Packages Registry
