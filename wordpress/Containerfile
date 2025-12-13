@@ -1,9 +1,8 @@
 FROM registry.redhat.io/ubi10/php-83:latest
 LABEL description="WordPress Test on UBI 10 PHP 8.3"
 
-# I Red Hats PHP-image lägger man koden i /opt/app-root/src
-# (Den mappen är redan konfigurerad som DocumentRoot i Apache)
+# Kopiera in koden till rätt ställe
 COPY index.php /opt/app-root/src/index.php
 
-# Vi behöver inte ens ange USER eller CMD, 
-# bas-imagen sköter allt det (startar Apache på port 8080 som user 1001).
+# HÄR ÄR FIXEN: Vi måste säga åt den att köra start-scriptet!
+CMD /usr/libexec/s2i/run
