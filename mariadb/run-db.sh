@@ -1,12 +1,24 @@
+mariadb/run-db.sh
 #!/bin/bash
 set -e
 
-# Sätt defaults (OBS: Inga backslash innan $ här!)
+# Sätt defaults
 DB_NAME=${MARIADB_DATABASE:-wordpress_db}
 DB_USER=${MARIADB_USER:-wordpress}
 DB_PASS=${MARIADB_PASSWORD:-hemligt}
 
 echo "🚀 Starting MariaDB Wrapper..."
+
+# --- NY FIX: Initiera databasen om disken är tom ---
+if [ ! -d "/var/lib/mysql/mysql" ]; then
+    echo "✨ Volume is empty! Initializing new database..."
+    mariadb-install-db --datadir=/var/lib/mysql --auth-root-authentication-method=normal
+    echo "✅ Database initialized."
+else
+    echo "📂 Database files found. Skipping initialization."
+fi
+# ---------------------------------------------------
+
 echo "👤 User: $DB_USER"
 echo "🗄️  DB:   $DB_NAME"
 
