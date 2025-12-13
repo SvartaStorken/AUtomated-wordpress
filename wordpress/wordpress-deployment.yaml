@@ -16,15 +16,31 @@ spec:
     spec:
       containers:
         - name: wordpress
-          # Här pekar vi på din nya image
           image: ghcr.io/svartastorken/ubi10-wordpress:latest
           imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
           
-          # OBS: Detta överskriver CMD i Dockerfilen. 
-          # Vi behåller sleep infinity för att kunna testa nätverket manuellt först.
-          command: ["sleep", "infinity"]
+          # OBS: Ta bort 'command' helt nu.
+          # Bas-imagen har ett smart start-script som drar igång allt rätt.
           
-          # HÄR ÄR DET VIKTIGA FÖR DITT KLUSTER:
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secrets
+                  key: db-user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secrets
+                  key: db-password
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secrets
+                  key: db-name
+          
           resources:
             requests:
               memory: "64Mi"

@@ -1,13 +1,9 @@
-FROM registry.redhat.io/ubi10/ubi:latest
-LABEL description="WordPress Base Image on UBI 10"
+FROM registry.redhat.io/ubi10/php-83:latest
+LABEL description="WordPress Test on UBI 10 PHP 8.3"
 
-# 1. Installera MariaDB-klienten (för att kunna testa anslutning)
-# Vi installerar även 'nc' (netcat) som är bra för nätverkstester
-RUN dnf -y install mariadb nc && \
-    dnf clean all
+# I Red Hats PHP-image lägger man koden i /opt/app-root/src
+# (Den mappen är redan konfigurerad som DocumentRoot i Apache)
+COPY index.php /opt/app-root/src/index.php
 
-# 2. Skapa en enkel användare (OpenShift gillar inte root)
-USER 1001
-
-# 3. Håll containern vid liv så vi kan logga in och testa
-CMD ["sleep", "infinity"]
+# Vi behöver inte ens ange USER eller CMD, 
+# bas-imagen sköter allt det (startar Apache på port 8080 som user 1001).
