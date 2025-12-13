@@ -43,3 +43,10 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "200m"
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mariadb-storage
+      volumes:
+        - name: mariadb-storage
+          persistentVolumeClaim:
+            claimName: mariadb-pvc
