@@ -19,7 +19,9 @@ define('NONCE_SALT',       getenv('WP_NONCE_SALT'));
 
 $table_prefix = 'wp_';
 
-define( 'WP_DEBUG', false );
+define( 'WP_DEBUG', true );
+define( 'WP_DEBUG_LOG', true );
+define( 'WP_DEBUG_DISPLAY', true );
 
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', __DIR__ . '/' );

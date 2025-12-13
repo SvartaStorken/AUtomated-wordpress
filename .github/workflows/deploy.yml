@@ -87,6 +87,8 @@ jobs:
           --from-literal=db-password=${{ secrets.DB_PASSWORD }} \
           --from-literal=db-name=${{ secrets.DB_NAME }}
           oc apply -f ./wordpress/wordpress-deployment.yaml
+          oc apply -f ./wordpress/wordpress-service.yaml
+          oc apply -f ./wordpress/wordpress-route.yaml
           oc apply -f ./mariadb/mariadb-pvc.yaml
           oc apply -f ./mariadb/mariadb-service.yaml
           oc apply -f ./mariadb/mariadb-deployment.yaml
