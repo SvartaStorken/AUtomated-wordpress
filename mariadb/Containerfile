@@ -13,7 +13,9 @@ COPY fix-permissions /usr/local/bin/
 COPY run-db.sh /usr/local/bin
 
 # 4. Gör scripten körbara
-RUN chmod +x /usr/local/bin/fix-permissions && \
+RUN sed -i 's/\r$//' /usr/local/bin/fix-permissions && \
+    sed -i 's/\r$//' /usr/local/bin/run-db.sh && \
+    chmod +x /usr/local/bin/fix-permissions && \
     chmod +x /usr/local/bin/run-db.sh
 
 # 5. Mappar och Rättigheter

@@ -1,4 +1,3 @@
-mariadb/run-db.sh
 #!/bin/bash
 set -e
 
