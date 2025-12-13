@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb      # Detta blir DNS-namnet (host) som WordPress ska använda
+  labels:
+    app: mariadb
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:
+    app: mariadb     # Kopplar trafiken till poddar med label "app: mariadb"
+  type: ClusterIP    # Standard, endast internt nåbar
