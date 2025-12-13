@@ -63,6 +63,10 @@ jobs:
 
       - name: Deploy MariaDB to OpenShift
         run: |
+          oc create secret generic mariadb-secrets \
+          --from-literal=db-user=${{ secrets.DB_USER }} \
+          --from-literal=db-password=${{ secrets.DB_PASSWORD }} \
+          --from-literal=db-name=${{ secrets.DB_NAME }}
           oc apply -f ./mariadb/mariadb-deployment.yaml
           oc rollout restart deployment/mariadb
 
