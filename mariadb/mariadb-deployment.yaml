@@ -22,11 +22,20 @@ spec:
             - containerPort: 3306
           env:
             - name: MARIADB_USER
-              value: "wordpress"
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secrets
+                  key: db-user
             - name: MARIADB_PASSWORD
-              value: "hemligt"      # I produktion bör detta vara en Secret
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secrets
+                  key: db-password
             - name: MARIADB_DATABASE
-              value: "wordpress_db"
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secrets
+                  key: db-name
           resources:
             requests:
               memory: "256Mi"
