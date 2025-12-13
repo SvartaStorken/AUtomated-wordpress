@@ -5,6 +5,7 @@ metadata:
   labels:
     app: mariadb
 spec:
+  storageClassName: lvms-vg1
   accessModes:
     - ReadWriteOnce
   resources:
