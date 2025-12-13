@@ -1,0 +1,13 @@
+FROM registry.redhat.io/ubi10/ubi:latest
+LABEL description="WordPress Base Image on UBI 10"
+
+# 1. Installera MariaDB-klienten (för att kunna testa anslutning)
+# Vi installerar även 'nc' (netcat) som är bra för nätverkstester
+RUN dnf -y install mariadb nc && \
+    dnf clean all
+
+# 2. Skapa en enkel användare (OpenShift gillar inte root)
+USER 1001
+
+# 3. Håll containern vid liv så vi kan logga in och testa
+CMD ["sleep", "infinity"]

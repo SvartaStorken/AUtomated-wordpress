@@ -8,6 +8,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ubi10-mariadb-12.2
+  WORDPRESS_IMAGE_NAME: ubi10-wordpress
   OPENSHIFT_NAMESPACE: test-miljo2
 
 jobs:
@@ -60,9 +61,31 @@ jobs:
           openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
           insecure_skip_tls_verify: true
           namespace: ${{ env.OPENSHIFT_NAMESPACE }}
+      
+      - name: Build WordPress Base Image
+        uses: redhat-actions/buildah-build@v2.13
+        with:
+          image: ${{ env.WORDPRESS_IMAGE_NAME }}
+          context: ./wordpress
+          tags: latest
+          containerfiles: ./wordpress/Containerfile
+
+      - name: Push WordPress image to GitHub Packages
+        uses: redhat-actions/push-to-registry@v2.8
+        with:
+          image: ${{ env.WORDPRESS_IMAGE_NAME }}
+          tags: latest
+          registry: ${{ env.REGISTRY }}/svartastorken
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy MariaDB to OpenShift
         run: |
+          oc delete pod wordpress-test --ignore-not-found
+          oc run wordpress-test \
+            --image=${{ env.REGISTRY }}/svartastorken/${{ env.WORDPRESS_IMAGE_NAME }}:latest \
+            --restart=Never \
+            --command -- sleep infinity
           oc delete secret mariadb-secrets --ignore-not-found
           oc create secret generic mariadb-secrets \
           --from-literal=db-user=${{ secrets.DB_USER }} \
