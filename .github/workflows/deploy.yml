@@ -81,18 +81,15 @@ jobs:
 
       - name: Deploy MariaDB to OpenShift
         run: |
-          oc delete pod wordpress-test --ignore-not-found
-          oc run wordpress-test \
-            --image=${{ env.REGISTRY }}/svartastorken/${{ env.WORDPRESS_IMAGE_NAME }}:latest \
-            --restart=Never \
-            --command -- sleep infinity
           oc delete secret mariadb-secrets --ignore-not-found
           oc create secret generic mariadb-secrets \
           --from-literal=db-user=${{ secrets.DB_USER }} \
           --from-literal=db-password=${{ secrets.DB_PASSWORD }} \
           --from-literal=db-name=${{ secrets.DB_NAME }}
+          oc apply -f ./wordpress/wordpress-deployment.yaml
           oc apply -f ./mariadb/mariadb-pvc.yaml
           oc apply -f ./mariadb/mariadb-service.yaml
           oc apply -f ./mariadb/mariadb-deployment.yaml
           oc rollout restart deployment/mariadb
+          oc rollout restart deployment/wordpress
 
