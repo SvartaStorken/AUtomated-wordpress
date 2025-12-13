@@ -3,11 +3,15 @@ LABEL description="WordPress Final on UBI 10"
 
 USER 0
 
-# 1. Installera felsökningsverktyg (MariaDB-client & Netcat)
+# 1. Installera verktyg & Lås upp miljövariabler (VIKTIGT!)
 RUN dnf -y install mariadb nc && \
-    dnf clean all
+    dnf clean all && \
+    # FIXEN: Tvinga PHP-FPM att behålla variablerna
+    sed -i 's/;clear_env = no/clear_env = no/' /etc/php-fpm.d/www.conf && \
+    # Extra: Se till att PHP laddar in Environment (E)
+    sed -i 's/variables_order = .*/variables_order = "EGPCS"/' /etc/php.ini
 
-# 2. Ladda ner och packa upp WordPress
+# 2. Ladda ner WordPress
 RUN curl -L https://wordpress.org/latest.tar.gz -o /tmp/wordpress.tar.gz && \
     tar -xzf /tmp/wordpress.tar.gz -C /opt/app-root/src --strip-components=1 && \
     rm /tmp/wordpress.tar.gz
@@ -15,7 +19,7 @@ RUN curl -L https://wordpress.org/latest.tar.gz -o /tmp/wordpress.tar.gz && \
 # 3. Kopiera config
 COPY wp-config.php /opt/app-root/src/wp-config.php
 
-# 4. Rättigheter
+# 4. Rättigheter (Så WordPress kan ladda upp bilder)
 RUN chown -R 1001:0 /opt/app-root/src && \
     chmod -R g+w /opt/app-root/src
 
